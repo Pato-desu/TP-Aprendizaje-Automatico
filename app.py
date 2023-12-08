@@ -21,8 +21,29 @@ input_features = [ "Date",  "MinTemp", "MaxTemp", "Rainfall", "Evaporation", "Su
 "WindGustDir", "WindGustSpeed", "Humidity9am", "Humidity3pm", "Pressure9am", "Pressure3pm",
 "Cloud9am", "Cloud3pm", "Temp9am", "Temp3pm",  "RainTomorrow", "RainfallTomorrow"]
 
-# Definir sliders
+default_values = {"Unnamed: 0": 0, 
+                  "Date": 0, 
+                  "Location": "Sydney", 
+                  "MinTemp": 20, 
+                  "MaxTemp": 25, 
+                  "Rainfall": 10, 
+                  "Evaporation": 10, 
+                  "Sunshine": 7, 
+                  "WindGustDir": 0, 
+                  "WindGustSpeed": 10, 
+                  "Humidity9am": 50, 
+                  "Humidity3pm": 50, 
+                  "Pressure9am": 1010, 
+                  "Pressure3pm": 1010, 
+                  "Cloud9am": 4, 
+                  "Cloud3pm": 4, 
+                  "Temp9am": 20, 
+                  "Temp3pm": 25, 
+                  "RainToday": "No", 
+                  "RainTomorrow": 0, 
+                  "RainfallTomorrow": 10}
 
+# Definir sliders
 date = st.slider("Date", min_value=0, max_value=145411, value=72705)
 min_temp = st.slider("MinTemp", min_value=-10, max_value=40, value=20)
 max_temp = st.slider("MaxTemp", min_value=-10, max_value=50, value=25)
@@ -42,7 +63,6 @@ temp_3pm = st.slider("Temp3pm", min_value=-10, max_value=50, value=25)
 rain_tomorrow = st.slider("RainTomorrow", min_value=0, max_value=1, value=0, step=1)
 rainfall_tomorrow = st.slider("RainfallTomorrow", min_value=0, max_value=200, value=10)
 
-
 def get_user_input():
     """
     esta función genera los inputs del frontend de streamlit para que el usuario pueda cargar los valores.
@@ -58,18 +78,17 @@ def get_user_input():
 
         submit_button = st.form_submit_button(label='Submit')
 
-    return pd.DataFrame([input_dict]), submit_button
+    return input_dict, submit_button
 
 
 user_input, submit_button = get_user_input()
 
 if submit_button:
-    # Agregar el resto de los features
-    user_input["Unnamed: 0"] = 0
-    user_input["Location"] = "Sydney"
-    user_input["RainToday"] = "No"
+    values = default_values.update(user_input)
 
-    print(user_input)
+    values = pd.DataFrame([values])
+
+    print(values)
     # Preprocesar los datos y hacer la predicción
     #datos = preprocesamiento.transform(user_input)
     #prediction = clasificacion.predict(datos)
