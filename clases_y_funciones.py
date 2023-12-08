@@ -294,24 +294,3 @@ def x_ys_splitter(df):
 def f1_avg(y_true, y_pred):
     from sklearn.metrics import f1_score
     return f1_score(y_true, y_pred, average='macro')
-
-def f1_avg_tf(y_true, y_pred):
-    # Calculate true positives, false positives, false negatives for each class
-    TP = tf.reduce_sum(tf.cast(tf.logical_and(tf.equal(y_true, 1), tf.equal(tf.round(y_pred), 1)), tf.float32))
-    FP = tf.reduce_sum(tf.cast(tf.logical_and(tf.equal(y_true, 0), tf.equal(tf.round(y_pred), 1)), tf.float32))
-    FN = tf.reduce_sum(tf.cast(tf.logical_and(tf.equal(y_true, 1), tf.equal(tf.round(y_pred), 0)), tf.float32))
-    TN = tf.reduce_sum(tf.cast(tf.logical_and(tf.equal(y_true, 0), tf.equal(tf.round(y_pred), 0)), tf.float32))
-
-    precision_1 = TP / (TP + FP + tf.keras.backend.epsilon())
-    recall_1 = TP / (TP + FN + tf.keras.backend.epsilon())
-
-    precision_0 = TN / (TN + FN + tf.keras.backend.epsilon())
-    recall_0 = TN / (TN + FP + tf.keras.backend.epsilon())
-
-    f1_1 = 2 * precision_1 * recall_1 / (precision_1 + recall_1 + tf.keras.backend.epsilon())
-    f1_0 = 2 * precision_0 * recall_0 / (precision_0 + recall_0 + tf.keras.backend.epsilon())
-
-    f1 = (f1_1 + f1_0)/2
-
-    # Return F1 scores for each class
-    return f1
